@@ -106,8 +106,7 @@ ENV/
 
 # Image J
 Fiji.app/
-data/
-notebooks/tmp/*
-notebooks/tmp_visualize/*
-notebooks/temp_processing/*
-tmp/
+HE/
+histology/
+polarimetry/
+polarimetry_v1/
