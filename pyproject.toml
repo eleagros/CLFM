@@ -5,16 +5,16 @@ build-backend = "hatchling.build"
 
 # https://peps.python.org/pep-0621/
 [project]
-name = "comparemethods"
+name = "clfm"
 description = ""
 readme = "README.md"
 requires-python = ">=3.8"
 license = { text = "BSD 3-Clause License" }
 authors = [
-    { email = "romain.gros@unibe.ch", name = "Romain Gros" },
+    { email = "elearomy.gros@unibe.ch", name = "Romy Gros" },
 ]
 dynamic = ["version"]
-dependencies = ["numpy", "Pillow", "scipy", "tqdm", "matplotlib"]
+dependencies = ["numpy", "Pillow", "scipy", "tqdm", "matplotlib", "pyimagej"]
 
 [tool.hatch.version]
 source = "vcs"

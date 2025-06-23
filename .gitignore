@@ -105,8 +105,5 @@ ENV/
 .vscode/
 
 # Image J
-Fiji.app/
-HE/
-histology/
-polarimetry/
-polarimetry_v1/
+third_party/Fiji.app/
+third_party/SuperGlue*
