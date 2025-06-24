@@ -106,4 +106,4 @@ ENV/
 
 # Image J
 third_party/Fiji.app/
-third_party/SuperGlue*
+third_party/SuperGluePretrainedNetwork/
