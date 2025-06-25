@@ -14,7 +14,7 @@ authors = [
     { email = "elearomy.gros@unibe.ch", name = "Romy Gros" },
 ]
 dynamic = ["version"]
-dependencies = ["numpy", "Pillow", "scipy", "tqdm", "matplotlib", "pyimagej"]
+dependencies = ["numpy", "Pillow", "scipy", "tqdm", "matplotlib", "pyimagej", "opencv-python"]
 
 [tool.hatch.version]
 source = "vcs"

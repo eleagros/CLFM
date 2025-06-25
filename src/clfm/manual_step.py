@@ -358,5 +358,5 @@ class PointSelector:
         
         utils.write_coordinates_txt(
             self.path_selection,
-            (self.fixed_pts, self.moving_pts)
+            (self.moving_pts, self.fixed_pts)
         )
