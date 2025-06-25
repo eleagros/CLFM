@@ -49,20 +49,6 @@ It is recommended to use a Python virtual environment to manage dependencies and
     pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
     ```
 
-
-## Data
-
-The dataset contains two sub-folders: `histology` and `polarimetry`.
-
-- `histology`: Contains histological images of the samples.
-- `polarimetry`: Contains polarimetric images of the samples.
-
-To reproduce the results or test the algorithms on your own data, organize your data in the same structure.
-
-The code to produce the ground truth manually (if not provided via resampling maps) is provided in the `manual_step.py` file.
-An example is provided in the notebook `generate_ground_truth.ipynb`.
-
-
 ## Third-party dependencies and licensing
 
 Some third-party code is provided in `third_party/` is under different licenses (MIT, Apache 2.0, or academic/non-commercial).
@@ -72,7 +58,7 @@ Some third-party code is provided in `third_party/` is under different licenses 
 ### How to obtain and use SuperGlue
 
 1. **Download the original SuperGlue code**  
-   Get a clean, unmodified copy from the official repository and place it in the `third_party` folder:  
+   Get a clean, unmodified copy from the official repository and place it in the `third_party/SuperGluePretrainedNetwork` folder:  
    [https://github.com/magicleap/SuperGluePretrainedNetwork](https://github.com/magicleap/SuperGluePretrainedNetwork)
 
 2. **Apply the patch provided**  
@@ -86,10 +72,35 @@ Some third-party code is provided in `third_party/` is under different licenses 
 - Only the patch file and instructions are provided here, not the SuperGlue code itself.
 - This approach respects the license and allows reproducibility.
 
+### Additional requirement: Fiji
+
+To use the image alignment and processing features, you need to download [Fiji](https://imagej.net/software/fiji/downloads) (a distribution of ImageJ).  
+After downloading, **extract the `Fiji.app` folder and place it inside the `third_party/` directory** of this repository:
+
+```
+third_party/Fiji.app/
+```
+
+This ensures all Fiji/ImageJ-based scripts will work correctly.
+
+## Data
+
+The dataset contains two sub-folders: `histology` and `polarimetry`.
+
+- `histology`: Contains histological images of the samples.
+- `polarimetry`: Contains polarimetric images of the samples.
+
+To reproduce the results or test the algorithms on your own data, organize your data in the same structure.
+
+The code to produce the ground truth manually (if not provided via resampling maps) is provided in the `manual_step.py` file.
+An example is provided in the notebook `generate_ground_truth.ipynb`.
+
 ## License
 All source code is made available under a BSD license. See `LICENSE` for the full license text.
 
-
-
 ## Citation
 If you use this code or data, please cite the associated manuscript.
+
+> **Note:** There is a known issue with Java compatibility on some machines when using Fiji/ImageJ and PyImageJ.  
+> To avoid these issues, it is recommended to install PyImageJ and set up your environment using the instructions at [https://py.imagej.net/en/latest/Install.html#installing-via-conda-mamba](https://py.imagej.net/en/latest/Install.html#installing-via-conda-mamba).  
+> Please use the provided conda environment for installing this repository if you encounter Java-related problems.

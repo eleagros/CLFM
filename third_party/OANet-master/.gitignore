@@ -2,11 +2,9 @@
 *.pyc
 __pycache__
 data_dump/
-model/
 log
 datasets
 *ply
-*pth
 *pkl
 *tar.gz
 *swp
