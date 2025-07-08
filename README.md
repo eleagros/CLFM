@@ -81,7 +81,7 @@ From the root of this repository, run:
 ```sh
 cd third_party/omniglue
 pip install -e .
-cd ../../
+cd ../../ 
 ```
 This will install OmniGlue in editable mode so it can be used by the rest of the codebase.
 
