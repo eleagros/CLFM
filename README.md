@@ -65,12 +65,25 @@ Some third-party code is provided in `third_party/` is under different licenses 
    If this repository provides a patch file (e.g., `superglue.patch`), save it in the root directory of the original SuperGlue code and run:
 
    ```sh
-   patch third_party/SuperGluePretrainedNetwork/demo_superglue.py < third_party/superglue.patch
+   patch third_party/SuperGluePretrainedNetwork/demo_superglue.py < third_party/demo_superglue.patch
    ```
+    **Windows users:** You can use the `patch` command by installing [Git Bash](https://gitforwindows.org/), which provides a Unix-like terminal and tools.
 
 **Note:**  
 - Only the patch file and instructions are provided here, not the SuperGlue code itself.
 - This approach respects the license and allows reproducibility.
+
+### How to install OmniGlue
+
+To use the OmniGlue matcher, you also need to install the `omniglue` package.  
+From the root of this repository, run:
+
+```sh
+cd third_party/omniglue
+pip install -e .
+cd ../../
+```
+This will install OmniGlue in editable mode so it can be used by the rest of the codebase.
 
 ### Additional requirement: Fiji
 
