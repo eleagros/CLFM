@@ -107,3 +107,4 @@ ENV/
 # Image J
 third_party/Fiji.app/
 third_party/SuperGluePretrainedNetwork/
+third_party/omniglue/models/

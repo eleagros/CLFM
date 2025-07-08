@@ -85,6 +85,25 @@ cd ../../
 ```
 This will install OmniGlue in editable mode so it can be used by the rest of the codebase.
 
+The OmniGlue matcher requires pre-trained model files, which are **not included** in this repository due to their size.  
+You need to download them manually from the official OmniGlue GitHub repository.
+
+1. Visit the [OmniGlue GitHub releases page](https://github.com/google-research/omniglue#pretrained-models).
+2. Download the required model files (e.g., `og_export`, `sp_v6`, `dinov2_vitb14_pretrain.pth`) as described in their documentation.
+3. Place the downloaded model files in the following directory structure:
+
+```
+third_party/omniglue/models/
+```
+
+For example:
+```
+third_party/omniglue/models/og_export
+third_party/omniglue/models/sp_v6
+third_party/omniglue/models/dinov2_vitb14_pretrain.pth
+```
+
+
 ### Additional requirement: Fiji
 
 To use the image alignment and processing features, you need to download [Fiji](https://imagej.net/software/fiji/downloads) (a distribution of ImageJ).  
