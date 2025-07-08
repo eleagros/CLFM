@@ -103,7 +103,6 @@ third_party/omniglue/models/sp_v6
 third_party/omniglue/models/dinov2_vitb14_pretrain.pth
 ```
 
-
 ### Additional requirement: Fiji
 
 To use the image alignment and processing features, you need to download [Fiji](https://imagej.net/software/fiji/downloads) (a distribution of ImageJ).  
