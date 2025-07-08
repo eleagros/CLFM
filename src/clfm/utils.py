@@ -411,9 +411,11 @@ def plot_results(
 def bootstrap_parameters(
     distances: list,
     type_alignment: str,
+    threshold: int,
+    mm_per_pixel: float,
     parameter: str = 'rmse',
-    threshold: int = 30,
-    num_samples: int =10000):
+    num_samples: int = 10000
+):
     """
     Perform bootstrapping to estimate the variance or precision of point distribution.
 
@@ -424,6 +426,8 @@ def bootstrap_parameters(
     Args:
         distances (list or np.ndarray): List of distances/errors.
         type_alignment (str): Alignment type ('HE' or other), used for scaling.
+        threshold (int): Precision threshold (used if parameter='precision').
+        mm_per_pixel (float): Micrometers per pixel for the images, used for scaling
         parameter (str): Metric to bootstrap ('rmse' or 'precision'). Default is 'rmse'.
         threshold (float): Precision threshold (used if parameter='precision'). Default is 30.
         num_samples (int): Number of bootstrap samples. Default is 10000.
@@ -452,13 +456,9 @@ def bootstrap_parameters(
     lower_bound = np.percentile(bootstrap, 2.5)
     upper_bound = np.percentile(bootstrap, 97.5)
 
-    # Set scaling factor for physical units
-    # 1 pixel = 26um (histology), 34um (other)
-    factor = 0.026 if type_alignment == 'HE' else 0.034
-
     if parameter == 'rmse':
         ci = (mean_variance - lower_bound + upper_bound - mean_variance) / 2
-        return mean_variance, ci, mean_variance * factor, ci * factor
+        return mean_variance, ci, mean_variance * mm_per_pixel, ci * mm_per_pixel
     else:
         ci = (mean_variance - lower_bound + upper_bound - mean_variance) / 2 * 100
         return mean_variance * 100, ci

@@ -6,10 +6,11 @@ from tqdm import tqdm
 from clfm import utils
 
 def find_rmse(
+    combinations: tuple,
     parameters: dict,
     images: dict,
     type_alignment: str,
-    combinations: tuple
+    threshold: float
 ):
     """
     Compute RMSE and precision metrics for all tiles.
@@ -19,6 +20,8 @@ def find_rmse(
         images (dict): Dictionary with loaded images.
         type_alignment (str): Alignment type.
         combinations (tuple): Tuple of registration method combinations.
+        threshold (float): Maximum number of pixels to be considered a correct match.
+        mm_per_pixel (float): Micrometers per pixel for the images.
 
     Returns:
         tuple: (rmses, metrics) dictionaries for each tile.
@@ -41,7 +44,8 @@ def find_rmse(
             combinations,
             images[current_tile],
             value,
-            type_alignment
+            type_alignment,
+            threshold=threshold
         )
         rmses[current_tile] = res[0]
         metrics[current_tile] = res[1]
@@ -53,7 +57,8 @@ def find_one_rmse(
     combinations: tuple,
     images_tile: dict,
     value: dict,
-    type_alignment: str
+    type_alignment: str,
+    threshold: float
 ):
     """
     Compute RMSE and precision for a single tile and all registration method combinations.
@@ -72,6 +77,7 @@ def find_one_rmse(
         images_tile (dict): Dictionary with 'reference' and 'moving' images.
         value (dict): Dictionary with paths for coordinates, distances, and plots.
         type_alignment (str): Alignment type ('histology' or other).
+        threshold (float): Maximum number of pixels to be considered a correct match.
 
     Returns:
         tuple: (rmses, metrics) dictionaries for each combination.
@@ -137,12 +143,6 @@ def find_one_rmse(
         
         # Calculate RMSE and precision metrics        
         rmse = utils.calculate_rmse(distances)
-        
-        # Set the threshold for precision calculation based on the type of alignment
-        if type_alignment == 'histology':
-            threshold = 10
-        else:
-            threshold = 30
             
         precision = utils.calculate_precision(distances, threshold=threshold)
         
@@ -170,7 +170,10 @@ def aggregate_and_bootstrap_metrics(
     parameters: dict,
     combinations: tuple,
     type_alignment: str,
-    num_samples=1000
+    threshold: float,
+    mm_per_pixel: float,
+    num_samples=1000,
+    
 ):
     """
     Aggregate distances for each combination across all tiles and compute bootstrapped RMSE and precision.
@@ -179,6 +182,8 @@ def aggregate_and_bootstrap_metrics(
         parameters_dict (dict): Dictionary with tile parameters (must contain 'path_distances').
         combinations (tuple): Tuple of registration method combinations.
         type_alignment (str): Alignment type ('polarimetry', 'histology', etc.).
+        threshold (float): Maximum number of pixels to be considered a correct match.
+        mm_per_pixel (float): Micrometers per pixel for the images.
         num_samples (int): Number of bootstrap samples for statistics.
 
     Returns:
@@ -216,22 +221,20 @@ def aggregate_and_bootstrap_metrics(
         total=len(all_distances),
         desc='Bootstrapping metrics'
     ):
-        if type_alignment == 'polarimetry':
-            threshold = 30
-        else:
-            threshold = 5
-
         rmses[key] = utils.bootstrap_parameters(
             distance,
             type_alignment,
+            threshold=threshold,
+            mm_per_pixel=mm_per_pixel,
             parameter='rmse',
             num_samples=num_samples
         )
         metrics[key] = utils.bootstrap_parameters(
             distance,
             type_alignment,
-            parameter='precision',
             threshold=threshold,
+            mm_per_pixel=mm_per_pixel,
+            parameter='precision',
             num_samples=num_samples
         )
 

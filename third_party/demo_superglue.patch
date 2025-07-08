@@ -1,5 +1,5 @@
---- /home/elea/Downloads/tmp/SuperGluePretrainedNetwork-master/demo_superglue.py	2022-02-15 11:43:29.000000000 +0100
-+++ /home/elea/Downloads/tmp/superglue/demo_superglue.py	2025-06-23 17:36:47.601987820 +0200
+--- /home/elea/Downloads/demo_superglue.py	2025-07-08 19:59:03.131758086 +0200
++++ /home/elea/Documents/HORAO/repositories/CLFM/third_party/SuperGluePretrainedNetwork/demo_superglue.py	2025-07-08 19:05:22.040459597 +0200
 @@ -44,11 +44,15 @@
  # --------------------------------------------------------------------*/
  # %BANNER_END%
@@ -16,26 +16,25 @@
  
  from models.matching import Matching
  from models.utils import (AverageTimer, VideoStreamer,
-@@ -83,6 +87,18 @@
-         help='Resize the input image before running inference. If two numbers, '
-              'resize to the exact dimensions, if one number, resize the max '
+@@ -85,7 +89,7 @@
               'dimension, if -1, do not resize')
-+    parser.add_argument(
-+        '--x_min', type=int, default=0,
-+        help='')
-+    parser.add_argument(
-+        '--y_min', type=int, default=0,
-+        help='')
-+    parser.add_argument(
-+        '--chicago', type=int, default=0,
-+        help='')
-+    parser.add_argument(
-+        '--histology', type=int, default=0,
-+        help='')
  
      parser.add_argument(
-         '--superglue', choices={'indoor', 'outdoor'}, default='indoor',
-@@ -116,22 +132,24 @@
+-        '--superglue', choices={'indoor', 'outdoor'}, default='indoor',
++        '--superglue', choices={'indoor', 'outdoor'}, default='outdoor',
+         help='SuperGlue weights')
+     parser.add_argument(
+         '--max_keypoints', type=int, default=-1,
+@@ -102,7 +106,7 @@
+         '--sinkhorn_iterations', type=int, default=20,
+         help='Number of Sinkhorn iterations performed by SuperGlue')
+     parser.add_argument(
+-        '--match_threshold', type=float, default=0.2,
++        '--match_threshold', type=float, default=0.8,
+         help='SuperGlue match threshold')
+ 
+     parser.add_argument(
+@@ -116,22 +120,24 @@
          help='Force pytorch to run in CPU mode.')
  
      opt = parser.parse_args()
@@ -66,7 +65,7 @@
      config = {
          'superpoint': {
              'nms_radius': opt.nms_radius,
-@@ -153,14 +171,23 @@
+@@ -153,14 +159,23 @@
      assert ret, 'Error when reading the first frame (try different --input?)'
  
      frame_tensor = frame2tensor(frame, device)
@@ -74,7 +73,7 @@
 -    last_data = {k+'0': last_data[k] for k in keys}
 -    last_data['image0'] = frame_tensor
 +    
-+    if opt.histology:
++    if not os.path.exists(f'{opt.output_dir}/dict_ref.pickle'):
 +        frame_tensor = frame2tensor(frame, device)
 +        last_data = matching.superpoint({'image': frame_tensor})
 +        last_data = {k+'0': last_data[k] for k in keys}
@@ -94,7 +93,7 @@
          Path(opt.output_dir).mkdir(exist_ok=True)
  
      # Create a window to display the demo.
-@@ -168,30 +195,34 @@
+@@ -168,30 +183,34 @@
          cv2.namedWindow('SuperGlue matches', cv2.WINDOW_NORMAL)
          cv2.resizeWindow('SuperGlue matches', 640*2, 480)
      else:
@@ -123,7 +122,7 @@
          timer.update('data')
          stem0, stem1 = last_image_id, vs.i - 1
 +        
-+        if opt.histology:
++        if not os.path.exists(f'{opt.output_dir}/dict_mov.pickle'):
 +            frame_tensor = frame2tensor(frame, device)
 +            pred = matching({**last_data, 'image1': frame_tensor})
 +            kpts1 = pred['keypoints1'][0].cpu().numpy()
@@ -142,7 +141,7 @@
          matches = pred['matches0'][0].cpu().numpy()
          confidence = pred['matching_scores0'][0].cpu().numpy()
          timer.update('forward')
-@@ -199,6 +230,7 @@
+@@ -199,6 +218,7 @@
          valid = matches > -1
          mkpts0 = kpts0[valid]
          mkpts1 = kpts1[matches[valid]]
@@ -150,7 +149,7 @@
          color = cm.jet(confidence[valid])
          text = [
              'SuperGlue',
-@@ -221,7 +253,7 @@
+@@ -221,7 +241,7 @@
              key = chr(cv2.waitKey(1) & 0xFF)
              if key == 'q':
                  vs.cleanup()
@@ -159,7 +158,7 @@
                  break
              elif key == 'n':  # set the current frame as anchor
                  last_data = {k+'0': pred[k+'1'] for k in keys}
-@@ -233,27 +265,31 @@
+@@ -233,27 +253,31 @@
                  d = 0.1 * (-1 if key == 'e' else 1)
                  matching.superpoint.config['keypoint_threshold'] = min(max(
                      0.0001, matching.superpoint.config['keypoint_threshold']*(1+d)), 1)

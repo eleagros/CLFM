@@ -29,7 +29,9 @@ class CLFMProject:
     def __init__(
         self,
         path_database: str,
-        type_alignment: str
+        type_alignment: str,
+        threshold: float = None,
+        mm_per_pixel: float = None
     ):
         """
         Initialize the CLFMProject.
@@ -37,11 +39,26 @@ class CLFMProject:
         Args:
             path_database (str): Path to the main data directory.
             type_alignment (str): Type of alignment ('histology' or 'polarimetry').
+            threshold (float): Maximum number of pixels to be considered a correct match.
+            mm_per_pixel (float): mm_per_pixel per pixel for the images.
+        Raises:
+            ValueError: If type_alignment is not one of 'histology', 'polarimetry', or 'custom'.
         """
         self.repetitions = 1
+        if type_alignment not in ['histology', 'polarimetry', 'custom']:
+            raise ValueError("type_alignment must be one of: 'histology', 'polarimetry', or 'custom'")
         self.type_alignment = type_alignment
         self.path_main_data = path_database
-        
+        if self.type_alignment == 'custom':
+            if threshold is None or mm_per_pixel is None:
+                raise ValueError("For 'custom' alignment, both 'threshold' and 'um_per_pixel' must be provided.")
+            self.threshold = threshold
+            self.mm_per_pixel = mm_per_pixel
+        else:
+            # Default values for histology and polarimetry
+            self.threshold = 15 if self.type_alignment == 'polarimetry' else 10
+            self.mm_per_pixel = 0.026 if self.type_alignment == 'histology' else 0.050
+            
         self.get_parameters()
 
     def get_parameters(
@@ -56,7 +73,7 @@ class CLFMProject:
 
         Also ensures all necessary directories exist.
         """
-        self.folder_alignment = os.path.join(self.path_main_data, self.type_alignment)
+        self.folder_alignment = self.path_main_data
         self.folder_data = os.path.join(self.folder_alignment, 'data')
         self.folder_output = os.path.join(self.folder_alignment, 'output')
         self.folder_result = os.path.join(self.folder_alignment, 'results')
