@@ -123,6 +123,9 @@ The dataset contains two sub-folders: `histology` and `polarimetry`.
 
 To reproduce the results or test the algorithms on your own data, organize your data in the same structure.
 
+You can download the dataset directly from the following link:  
+[https://osf.io/download/686d751e6dd6f16b2cfd2e29/](https://osf.io/download/686d751e6dd6f16b2cfd2e29/).
+
 The code to produce the ground truth manually (if not provided via resampling maps) is provided in the `manual_step.py` file.
 An example is provided in the notebook `generate_ground_truth.ipynb`.
 
