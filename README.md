@@ -11,7 +11,7 @@ The repository also allows researchers to test the algorithms using their own da
 ## Software installation
 
 The [Jupyter notebook](http://jupyter.org/) `compare_methods.ipynb` contains an example run of the comparison of the different methods.
-The data used in this study can be downloaded from [this repository](https://osf.io/rsxgp/?view\_only=c1cc83138a494606820e86c173d8d6f2).
+The data used in this study can be downloaded from [this repository](https://osf.io/download/686d751e6dd6f16b2cfd2e29/).
 
 It is recommended to use a Python virtual environment to manage dependencies and avoid conflicts with other projects.
 
@@ -137,4 +137,5 @@ If you use this code or data, please cite the associated manuscript.
 
 > **Note:** There is a known issue with Java compatibility on some machines when using Fiji/ImageJ and PyImageJ.  
 > To avoid these issues, it is recommended to install PyImageJ and set up your environment using the instructions at [https://py.imagej.net/en/latest/Install.html#installing-via-conda-mamba](https://py.imagej.net/en/latest/Install.html#installing-via-conda-mamba).  
+
 > Please use the provided conda environment for installing this repository if you encounter Java-related problems.
