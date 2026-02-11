@@ -2,7 +2,7 @@
 
 by Éléa Gros
 
-This repository contains the code used to generate the results presented in the associated manuscript entitled "Alignment of histological and polarimetric large-scale imaging for brain tissue characterization" (10.1117/1.JBO.30.9.096003)[https://doi.org/10.1117/1.JBO.30.9.096003], in which the performance of various local feature matching algorithms have been tested on image pairs including polarimetric images and histological images.
+This repository contains the code used to generate the results presented in the associated manuscript entitled "Alignment of histological and polarimetric large-scale imaging for brain tissue characterization" [[10.1117/1.JBO.30.9.096003](10.1117/1.JBO.30.9.096003), in which the performance of various local feature matching algorithms have been tested on image pairs including polarimetric images and histological images.
 
 The repository also allows researchers to test the algorithms using their own database.
 
@@ -141,4 +141,5 @@ If you use this code or data, please cite the associated manuscript:
 > To avoid these issues, it is recommended to install PyImageJ and set up your environment using the instructions at [https://py.imagej.net/en/latest/Install.html#installing-via-conda-mamba](https://py.imagej.net/en/latest/Install.html#installing-via-conda-mamba).  
 
 > Please use the provided conda environment for installing this repository if you encounter Java-related problems.
+
 
