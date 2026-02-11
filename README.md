@@ -1,9 +1,8 @@
 # Comparison of local feature matching algorithms
 
-by
-Romy Gros
+by Éléa Gros
 
-This repository contains the code used to generate the results presented in the associated manuscript, in which the performance of various local feature matching algorithms have been tested on image pairs including polarimetric images and histological images.
+This repository contains the code used to generate the results presented in the associated manuscript entitled "Alignment of histological and polarimetric large-scale imaging for brain tissue characterization" (10.1117/1.JBO.30.9.096003)[https://doi.org/10.1117/1.JBO.30.9.096003], in which the performance of various local feature matching algorithms have been tested on image pairs including polarimetric images and histological images.
 
 The repository also allows researchers to test the algorithms using their own database.
 
@@ -133,9 +132,13 @@ An example is provided in the notebook `generate_ground_truth.ipynb`.
 All source code is made available under a BSD license. See `LICENSE` for the full license text.
 
 ## Citation
-If you use this code or data, please cite the associated manuscript.
+If you use this code or data, please cite the associated manuscript:
+```
+Éléa Gros, Omar Rodríguez-Núñez, Stefano Moriconi, Richard McKinley, Ekkehard Hewer, Théotim Lucas, Erik Vassella, Philippe Schucht, Tatiana Novikova, Christopher Hahne, Theoni Maragkou, "Alignment of histological and polarimetric large-scale imaging for brain tissue characterization," J. Biomed. Opt. 30(9) 096003 (23 September 2025)
+```
 
 > **Note:** There is a known issue with Java compatibility on some machines when using Fiji/ImageJ and PyImageJ.  
 > To avoid these issues, it is recommended to install PyImageJ and set up your environment using the instructions at [https://py.imagej.net/en/latest/Install.html#installing-via-conda-mamba](https://py.imagej.net/en/latest/Install.html#installing-via-conda-mamba).  
 
 > Please use the provided conda environment for installing this repository if you encounter Java-related problems.
+
