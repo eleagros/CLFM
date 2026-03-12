@@ -3,6 +3,7 @@ import re
 import numpy as np
 import time
 from tqdm import tqdm
+from functools import partial
 
 from clfm import utils, get_features, get_matches
 
@@ -180,6 +181,10 @@ class Matcher:
             self.matcher = get_matches.match_omniglue
             self.fun_pts = None
             self.fun = None
+        elif feature_points == 'matchanything':
+            self.matcher = partial(get_matches.match_matchanything, type_mode=matcher_method)
+            self.fun_pts = None
+            self.fun = None
         else:
             if feature_points == 'sift':
                 self.fun_pts = get_features.get_sift_features
@@ -229,7 +234,7 @@ class Matcher:
             
             for _ in range(self.repetitions):
                 start_time = time.time()
-                if self.feature_points == 'omniglue':
+                if self.feature_points == 'omniglue' or self.feature_points == 'matchanything':
                     self.matched_pts[key] = self.matcher(parameters)
                 else:
                     self.matched_pts[key] = self.matcher(self.fun_pts, self.fun, parameters)

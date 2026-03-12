@@ -107,4 +107,7 @@ ENV/
 # Image J
 third_party/Fiji.app/
 third_party/SuperGluePretrainedNetwork/
+third_party/MatchAnything/
+third_party/MatchAnything_funct/
 third_party/omniglue/models/
+clfm_db/

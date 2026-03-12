@@ -1,5 +1,6 @@
 import os
 import numpy as np
+from pathlib import Path
 np.random.seed(42)
 import cv2
 import scipy.io as sio
@@ -551,3 +552,7 @@ def get_omniglue_path():
 
 def get_Fiji_path():
     return os.path.join(get_third_party_path(), 'Fiji.app')
+
+def get_matchanything_path():
+    repo_root = Path(__file__).resolve().parents[2]
+    return repo_root / 'third_party' / 'MatchAnything'

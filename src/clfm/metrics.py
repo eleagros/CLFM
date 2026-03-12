@@ -121,6 +121,8 @@ def find_one_rmse(
             except:
                 idx_new, idy_new = [0, 0]
                 print(f'Error in {combination[0]}_{combination[1]}', path_coordinates)
+                import traceback
+                traceback.print_exc()
             
             if (idx_new + idy_new == 0):
                 pass

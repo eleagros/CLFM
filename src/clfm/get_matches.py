@@ -1,10 +1,16 @@
 import os
+from pathlib import Path
 import shutil
 import numpy as np
 import torch
 import pickle
+import sys
+import cv2
+import random
 
 from clfm import utils
+
+_RESIZE_IMGS = (832, 832)
 
 def mnn(
     ref: np.ndarray,
@@ -178,7 +184,7 @@ def superglue_matcher(
     # Load the results
     with open(f'{folder_output_superglue}/matches_000000_000001.pickle', 'rb') as handle:
         [matched_points_ref, matched_points_mov] = pickle.load(handle)
-        
+
     shutil.rmtree(f'{cwd}/tmp', ignore_errors=True)
     
     return matched_points_ref, matched_points_mov
@@ -236,7 +242,17 @@ def match_omniglue(
     """
     # Get the OmniGlue path and run the demo script
     path_omniglue = utils.get_omniglue_path()
-    os.system(f'cd {path_omniglue} && python demo.py {parameters['path_image_fixed']} {parameters['path_image_moving']}')
+
+    # Uncomment the line below to run on CPU (if GPU is not available)
+    cmd = (
+        f'cd {path_omniglue} && '
+        # f'CUDA_VISIBLE_DEVICES="" python demo.py '
+        f'{parameters["path_image_fixed"]} '
+        f'{parameters["path_image_moving"]}'
+    )
+
+    print(f"Running command: {cmd}")
+    os.system(cmd)
     
     # Load the matched points from the pickle file
     with open(f'{path_omniglue}/points_matched.pickle', 'rb') as handle:
@@ -245,3 +261,81 @@ def match_omniglue(
     return matched_points_ref, matched_points_mov
 
 
+def match_matchanything(
+    parameters: dict,
+    type_mode: str = 'eloftr',
+):  
+    """
+    Run Match Anything matcher via external script.
+
+    Args:
+        parameters (dict): Contains paths to images.
+
+    Returns:
+        tuple: (matched_points_ref, matched_points_mov)
+    """
+    img0 = cv2.imread(parameters['path_image_fixed'])
+    img0 = cv2.cvtColor(img0, cv2.COLOR_BGR2RGB)
+    img1 = cv2.imread(parameters['path_image_moving'])
+    img1 = cv2.cvtColor(img1, cv2.COLOR_BGR2RGB)
+
+    if str(utils.get_matchanything_path()) not in sys.path:
+        sys.path.append(str(utils.get_matchanything_path()))
+    if str(Path(utils.get_SuperGlue_path()).parent) not in sys.path:
+        sys.path.append(str(Path(utils.get_SuperGlue_path()).parent))
+    from imcui.ui.utils import run_matching
+
+    random.seed(42)
+    ransac_reproj_threshold = 12
+
+    results = run_matching(
+        img0, img1,
+        match_threshold=0.15,
+        extract_max_keypoints=5000,
+        keypoint_threshold=0.015,
+        key=f"matchanything_{type_mode}",
+        ransac_method="CV2_RANSAC",
+        ransac_reproj_threshold=ransac_reproj_threshold,
+        ransac_confidence=0.999,
+        ransac_max_iter=10000,
+        choice_geometry_type="Homography",
+        matcher_zoo=get_matcher_zoo(),
+        force_resize=False,
+        image_width=img0.shape[1],
+        image_height=img0.shape[0],
+        use_cached_model=False,
+    )
+
+    points_reference, points_moving = results[3][0], results[3][1]
+
+    mkpts0 = points_reference
+    # mkpts0[:, 0] = mkpts0[:, 0] * (img0.shape[1] / _RESIZE_IMGS[0])
+    # mkpts0[:, 1] = mkpts0[:, 1] * (img0.shape[0] / _RESIZE_IMGS[1])
+    mkpts1 = points_moving
+    # mkpts1[:, 0] = mkpts1[:, 0] * (img1.shape[1] / _RESIZE_IMGS[0])
+    # mkpts1[:, 1] = mkpts1[:, 1] * (img1.shape[0] / _RESIZE_IMGS[1])
+    return mkpts0, mkpts1
+
+def get_matcher_zoo() -> dict:
+    """
+    Returns a dictionary containing configurations for different MatchAnything models.
+    """
+    if str(utils.get_matchanything_path()) not in sys.path:
+        sys.path.append(str(utils.get_matchanything_path()))
+    from imcui.ui.utils import parse_match_config
+
+    base_conf = {
+        "matchanything_eloftr": {
+            "dense": True,
+            "matcher": "matchanything_eloftr",
+        },
+        "matchanything_roma": {
+            "dense": True,
+            "matcher": "matchanything_roma"
+        }
+    }
+
+    zoo = {}
+    for key, conf in base_conf.items():
+        zoo[key] = parse_match_config(conf)
+    return zoo
